@@ -6,14 +6,15 @@ const fs = require('fs');
 //Template of markdown for READme, replaced with template litearls
 const generateReadMe = ({ title, description, install, usage, contributors, test, license }) => {
 //license if statement for opions of license
+let licensechoice  = '';
+
 if (license == 'Apache') {
-    return '[![License: Apache](https://img.shields.io/badge/License-Apache-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)'
+   licensechoice =  '[![License: Apache](https://img.shields.io/badge/License-Apache-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)'
 }
 else if (license == 'MIT') {
-    return '[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)'
+    licensechoice =  '[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)'
 }
-else { return ''; }
-}
+
 const readmeContent =
     `# ${title}
 
@@ -39,12 +40,12 @@ ${usage}
 ${contributors}
 
 ## License
+${license}
+${licensechoice}
 
-The last section of a high-quality README file is the license. This lets other developers know what they can and cannot do with your project. If you need help choosing a license, refer to [https://choosealicense.com/](https://choosealicense.com/).
 
----
+## Contact Information
 
-🏆 The previous sections are the bare minimum, and your project will ultimately determine the content of this document. You might also want to consider adding the following sections.
 
 ## Badges
 
@@ -58,13 +59,13 @@ If your project has a lot of features, list them here.
 
 ## How to Contribute
 
-If you created an application or package and would like other developers to contribute it, you can include guidelines for how to do so. The [Contributor Covenant](https://www.contributor-covenant.org/) is an industry standard, but you can always write your own if you'd prefer.
+
 
 ## Tests
 
 ${test}`;
 return readmeContent;
-
+}
 
 
     // TODO: Create an array of questions for user input
@@ -107,6 +108,16 @@ return readmeContent;
             name: 'license',
             choices: ['Apache', 'MIT'],
         },
+        {
+            type: 'input',
+            name: 'githubUser',
+            message: 'Enter in your GitHub username. ',
+        },
+        {
+            type: 'input',
+            name: 'email',
+            message: 'Enter in your email',
+        },
     ];
 
 
@@ -116,7 +127,7 @@ return readmeContent;
         .then((answers) => {
             const readMePageContent = generateReadMe(answers);
 
-            fs.writeFile('README.md', readMePageContent, (err) =>
+            fs.writeFile('demo/README.md', readMePageContent, (err) =>
                 err ? console.log(err) : console.log('Successfully created readme.md!')
             );
         });
