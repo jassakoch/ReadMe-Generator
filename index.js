@@ -4,19 +4,21 @@ const fs = require('fs');
 
 
 //Template of markdown for READme, replaced with template litearls
-const generateReadMe = ({ title, description, install, usage, contributors, test, license }) => {
-//license if statement for opions of license
-let licensechoice  = '';
+const generateReadMe = ({ title, description, install, usage, contributors, test, license, githubUser, email }) => {
 
-if (license == 'Apache') {
-   licensechoice =  '[![License: Apache](https://img.shields.io/badge/License-Apache-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)'
-}
-else if (license == 'MIT') {
-    licensechoice =  '[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)'
-}
+    //license if statement for opions of license
+    let licensechoice = '';
 
-const readmeContent =
-    `# ${title}
+    if (license == 'Apache') {
+        licensechoice = '[![License: Apache](https://img.shields.io/badge/License-Apache-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)'
+    }
+    else if (license == 'MIT') {
+        licensechoice = '[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)'
+    }
+
+    //This variable will hold the template of the markdown and filling it with the template literals from the questions array 
+    const readmeContent =
+        `# ${title}
 
 ## Description
 ${description}
@@ -44,8 +46,9 @@ ${license}
 ${licensechoice}
 
 
-## Contact Information
-
+## Contact Information/Questions
+[Link to GitHub Page](https://github.com/${githubUser})<br>
+emai: ${email}
 
 ## Badges
 
@@ -59,78 +62,77 @@ If your project has a lot of features, list them here.
 
 ## How to Contribute
 
-
-
 ## Tests
 
 ${test}`;
-return readmeContent;
+    return readmeContent;
 }
 
 
-    // TODO: Create an array of questions for user input
-    const questions = [
+// Array of questions for user input
+const questions = [
 
 
-        {
-            type: 'input',
-            name: 'title',
-            message: 'What is the title of your project?',
-        },
-        {
-            type: 'input',
-            name: 'description',
-            message: 'Describe your project. What problem does it solve?',
-        },
-        {
-            type: 'input',
-            name: 'install',
-            message: 'How is the application installed?',
-        },
-        {
-            type: 'input',
-            name: 'usage',
-            message: 'Describe how to use the project',
-        },
-        {
-            type: 'input',
-            name: 'contributors',
-            message: 'Name the contributors',
-        },
-        {
-            type: 'input',
-            name: 'test',
-            message: 'How was this project tested?',
-        },
-        {
-            type: 'list',
-            message: 'What is your preferred license',
-            name: 'license',
-            choices: ['Apache', 'MIT'],
-        },
-        {
-            type: 'input',
-            name: 'githubUser',
-            message: 'Enter in your GitHub username. ',
-        },
-        {
-            type: 'input',
-            name: 'email',
-            message: 'Enter in your email',
-        },
-    ];
+    {
+        type: 'input',
+        name: 'title',
+        message: 'What is the title of your project?',
+    },
+    {
+        type: 'input',
+        name: 'description',
+        message: 'Describe your project. What problem does it solve?',
+    },
+    {
+        type: 'input',
+        name: 'install',
+        message: 'How is the application installed?',
+    },
+    {
+        type: 'input',
+        name: 'usage',
+        message: 'Describe how to use the project',
+    },
+    {
+        type: 'input',
+        name: 'contributors',
+        message: 'Name the contributors',
+    },
+    {
+        type: 'input',
+        name: 'test',
+        message: 'How was this project tested?',
+    },
+    {
+        type: 'list',
+        message: 'What is your preferred license',
+        name: 'license',
+        choices: ['Apache', 'MIT'],
+    },
+    {
+        type: 'input',
+        name: 'githubUser',
+        message: 'Enter in your GitHub username. ',
+    },
+    {
+        type: 'input',
+        name: 'email',
+        message: 'Enter in your email',
+    },
+];
 
 
+//Promting of the questions is initialized
+inquirer
+    .prompt(questions)
+    .then((answers) => {
+        const readMePageContent = generateReadMe(answers);
 
-    inquirer
-        .prompt(questions)
-        .then((answers) => {
-            const readMePageContent = generateReadMe(answers);
-
-            fs.writeFile('demo/README.md', readMePageContent, (err) =>
-                err ? console.log(err) : console.log('Successfully created readme.md!')
-            );
-        });
+        //writing of the responses to the readme.md file
+        fs.writeFile('demo/README.md', readMePageContent, (err) =>
+            err ? console.log(err) : console.log('Successfully created readme.md!')
+        );
+    });
 
 
 
